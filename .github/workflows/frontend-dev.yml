@@ -36,10 +36,10 @@ jobs:
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.EC2_HOST }}
-        username: jesse
+        username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "frontend-app.tar.gz"
-        target: "/home/jesse"
+        target: "/var/www/html"
 
     - name: Deploy frontend on EC2 via SSH
       uses: appleboy/ssh-action@v1.0.3
@@ -48,13 +48,10 @@ jobs:
         username: jesse
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          cd /home/jesse
+          cd  /var/www/html
           rm -rf frontend-deploy
           mkdir frontend-deploy
           tar -xzf frontend-app.tar.gz -C frontend-deploy
-          sudo rm -rf /var/www/html/*
-          sudo cp -r frontend-deploy/* /var/www/html/
-          echo "Frontend deployed to /var/www/html"
-
+         
 
 
