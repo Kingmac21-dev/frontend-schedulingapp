@@ -1,3 +1,4 @@
+
 name: Frontend CI/CD
 
 on:
@@ -48,10 +49,11 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          cd  /var/www/html
-          rm -rf frontend-deploy
-          mkdir frontend-deploy
-          tar -xzf frontend-app.tar.gz -C frontend-deploy
+          cd /var/www/html
+          sudo rm -rf frontend-deploy
+          sudo mkdir frontend-deploy
+          sudo tar -xzf frontend-app.tar.gz -C frontend-deploy
+          sudo chown -R www-data:www-data frontend-deploy
          
 
 
