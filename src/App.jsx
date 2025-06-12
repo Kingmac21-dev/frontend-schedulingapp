@@ -15,9 +15,10 @@ function App() {
   // Fetch schedules from backend on load and after schedule changes
   useEffect(() => {
     if (isLoggedIn) {
-      axios.get("http://localhost:4000/api/schedule")
-        .then(res => setSchedule(res.data))
-        .catch(err => console.error(err));
+      axios
+        .get("/api/schedule")
+        .then((res) => setSchedule(res.data))
+        .catch((err) => console.error(err));
     }
   }, [isLoggedIn]);
 
@@ -34,13 +35,14 @@ function App() {
   const handleSchedule = (e) => {
     e.preventDefault();
     if (name && datetime) {
-      axios.post("http://localhost:4000/api/schedule", { name, datetime })
-        .then(res => {
+      axios
+        .post("/api/schedule", { name, datetime })
+        .then((res) => {
           setSchedule([...schedule, res.data]);
           setName("");
           setDatetime("");
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           alert("Failed to save schedule");
         });
@@ -94,10 +96,7 @@ function App() {
           onChange={(e) => setDatetime(e.target.value)}
           style={{ padding: "0.5rem", width: "100%", marginBottom: "1rem" }}
         />
-        <button
-          type="submit"
-          style={{ padding: "0.5rem", width: "100%" }}
-        >
+        <button type="submit" style={{ padding: "0.5rem", width: "100%" }}>
           Submit Schedule
         </button>
       </form>
@@ -115,6 +114,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
