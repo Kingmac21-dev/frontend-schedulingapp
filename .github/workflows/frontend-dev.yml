@@ -41,8 +41,7 @@ jobs:
         source: "frontend-app.tar.gz"
         target: "/home/ubuntu"
         strip_components: 0
-        rm: false
-        tar_exec: ""  # disables automatic untar
+        rm: false  # keep archive file on server for manual untar
 
     - name: Deploy frontend on EC2 via SSH
       uses: appleboy/ssh-action@v1.0.3
@@ -54,6 +53,7 @@ jobs:
           sudo mkdir -p /var/www/html/frontend-deploy
           sudo tar -xzf /home/ubuntu/frontend-app.tar.gz -C /var/www/html/frontend-deploy
           sudo chown -R www-data:www-data /var/www/html/frontend-deploy
+
 
          
 
