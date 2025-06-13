@@ -1,52 +1,54 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 function App() {
-  const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const [name, setName] = useState("");
   const [datetime, setDatetime] = useState("");
   const [schedule, setSchedule] = useState([]);
 
-  const correctPassword = "devopsproject";
-
-  // Fetch schedules from backend on load and after schedule changes
   useEffect(() => {
     if (isLoggedIn) {
-      axios
-        .get("/api/schedule")
-        .then((res) => setSchedule(res.data))
-        .catch((err) => console.error(err));
+      fetch("/api/schedule")
+        .then((res) => res.json())
+        .then((data) => setSchedule(data))
+        .catch(() => alert("Failed to load schedule"));
     }
   }, [isLoggedIn]);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === correctPassword) {
+    if (password === "yourpassword") {
       setIsLoggedIn(true);
       setError("");
     } else {
-      setError("Incorrect password. Try again.");
+      setError("Incorrect password");
     }
   };
 
   const handleSchedule = (e) => {
     e.preventDefault();
-    if (name && datetime) {
-      axios
-        .post("/api/schedule", { name, datetime })
-        .then((res) => {
-          setSchedule([...schedule, res.data]);
-          setName("");
-          setDatetime("");
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("Failed to save schedule");
-        });
+    if (!name || !datetime) {
+      alert("Please enter both name and date/time");
+      return;
     }
+
+    fetch("/api/schedule", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, datetime }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Network response not OK");
+        return res.json();
+      })
+      .then((newEntry) => {
+        setSchedule((prev) => [...prev, newEntry]);
+        setName("");
+        setDatetime("");
+      })
+      .catch(() => alert("Failed to save schedule"));
   };
 
   if (!isLoggedIn) {
